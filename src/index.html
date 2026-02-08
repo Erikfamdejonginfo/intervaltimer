@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="description" content="Aanpasbare intervaltimer voor training">
+    <title>Interval Timer</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏱️</text></svg>">
+</head>
+<body>
+    <a href="#main" class="skip-link">Ga naar inhoud</a>
+
+    <header class="app-header">
+        <h1>Interval Timer</h1>
+    </header>
+
+    <main id="main">
+        <!-- HOME VIEW -->
+        <section id="view-home" class="view active" aria-label="Overzicht trainingsschema's">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                <h2>Mijn Schema's</h2>
+                <button class="btn btn-primary" id="btn-new-schema">+ Nieuw Schema</button>
+            </div>
+            <div id="schema-list" class="schema-list">
+                <div class="empty-state">
+                    <p>Nog geen trainingsschema's.</p>
+                    <p>Maak je eerste schema aan!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- EDITOR VIEW -->
+        <section id="view-editor" class="view" aria-label="Schema bewerken">
+            <div class="editor-header">
+                <h2 id="editor-title">Nieuw Schema</h2>
+                <button class="btn-icon" id="btn-editor-back" aria-label="Terug naar overzicht">&larr;</button>
+            </div>
+
+            <div class="form-group">
+                <label for="schema-name">Schemanaam</label>
+                <input type="text" id="schema-name" placeholder="bijv. Hardlooptraining" autocomplete="off">
+            </div>
+
+            <div id="sets-container"></div>
+
+            <button class="btn btn-secondary btn-block" id="btn-add-set" style="margin-top:0.5rem;">+ Set Toevoegen</button>
+
+            <div class="editor-total" id="editor-total" aria-live="polite"></div>
+
+            <div class="editor-actions">
+                <button class="btn btn-success" id="btn-save-schema">Opslaan</button>
+                <button class="btn btn-secondary" id="btn-cancel-editor">Annuleren</button>
+            </div>
+        </section>
+
+        <!-- TIMER VIEW -->
+        <section id="view-timer" class="view" aria-label="Actieve training">
+            <div class="timer-container" id="timer-container">
+                <div class="timer-set-name" id="timer-set-name"></div>
+                <div class="timer-info" id="timer-info" aria-live="polite"></div>
+                <div class="timer-step-name" id="timer-step-name" aria-live="polite"></div>
+                <div class="timer-display" id="timer-display" aria-live="assertive" role="timer">00:00</div>
+                <div class="timer-total" id="timer-total"></div>
+
+                <div class="progress-bar-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+
+                <div class="timer-controls">
+                    <button class="btn btn-primary" id="btn-pause">Pauze</button>
+                    <button class="btn btn-secondary" id="btn-skip">Volgende &rarr;</button>
+                    <button class="btn btn-danger" id="btn-stop">Stop</button>
+                </div>
+            </div>
+
+            <div class="timer-complete" id="timer-complete">
+                <h2>Training Voltooid!</h2>
+                <p id="complete-summary"></p>
+                <button class="btn btn-primary" id="btn-back-home">Terug naar overzicht</button>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
