@@ -1,4 +1,4 @@
-const CACHE_NAME = 'intervaltimer-v2';
+const CACHE_NAME = 'intervaltimer-v3';
 const ASSETS = [
     './',
     'index.html',
@@ -13,7 +13,9 @@ const ASSETS = [
     'js/utils.js',
     'manifest.json',
     'icons/icon-192.png',
-    'icons/icon-512.png'
+    'icons/icon-512.png',
+    'icons/caballoNormal_strip.png',
+    'icons/caballoNegro_strip.png'
 ];
 
 // Pre-cache all assets on install
