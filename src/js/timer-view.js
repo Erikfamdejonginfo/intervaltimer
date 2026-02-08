@@ -22,6 +22,7 @@ function cacheElements() {
     els.complete = document.getElementById('timer-complete');
     els.completeSummary = document.getElementById('complete-summary');
     els.totalTime = document.getElementById('timer-total');
+    els.horseSprite = document.getElementById('horse-sprite');
 }
 
 /**
@@ -160,6 +161,15 @@ function onStepStart({ segment, segmentIndex }) {
     // Color coding
     els.container.className = 'timer-container';
     els.container.classList.add(segment.type === 'pause' ? 'type-pause' : 'type-active');
+
+    // Randomly pick brown or black horse for active steps
+    if (segment.type === 'active' && els.horseSprite) {
+        if (Math.random() < 0.5) {
+            els.horseSprite.classList.add('negro');
+        } else {
+            els.horseSprite.classList.remove('negro');
+        }
+    }
 
     els.display.classList.remove('countdown-warning');
 
