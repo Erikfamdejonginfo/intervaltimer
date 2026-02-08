@@ -458,7 +458,7 @@ main {
     display: none;
     width: 100%;
     max-width: 600px;
-    height: 180px;
+    height: 200px;
     position: relative;
     margin-bottom: 0.5rem;
 }
@@ -516,19 +516,17 @@ main {
 
 .horse-runner {
     position: absolute;
-    bottom: 16px;
+    bottom: 14px;
     animation: horseRun 4s linear infinite;
 }
 
-/* === Horse Sprite === */
+/* === Horse Sprite (2x native size: 222x162) === */
 .horse-sprite {
-    width: 111px;
-    height: 81px;
-    transform: scale(1.6);
-    transform-origin: bottom center;
+    width: 222px;
+    height: 162px;
     background-image: url('../icons/caballoNormal_strip.png');
     background-repeat: no-repeat;
-    background-size: 1998px 81px;
+    background-size: 3996px 162px;
     animation: horseGallop 0.9s steps(18) infinite;
 }
 
@@ -538,7 +536,7 @@ main {
 
 @keyframes horseGallop {
     from { background-position: 0 0; }
-    to   { background-position: -1998px 0; }
+    to   { background-position: -3996px 0; }
 }
 
 /* === Dust Particles === */
@@ -585,8 +583,8 @@ main {
 }
 
 @keyframes horseRun {
-    0%   { left: -200px; }
-    100% { left: calc(100% + 200px); }
+    0%   { left: -240px; }
+    100% { left: calc(100% + 240px); }
 }
 
 @keyframes dustPuff {
