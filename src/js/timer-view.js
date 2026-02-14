@@ -140,18 +140,15 @@ function runStartCountdown(firstSegment) {
 
         let count = 10;
         els.display.textContent = String(count);
-        if (count <= 3) {
-            els.display.classList.add('countdown-warning');
-            playCountdown(count);
-        }
+        playCountdown(count);
 
         const interval = setInterval(() => {
             count--;
             if (count > 0) {
                 els.display.textContent = String(count);
+                playCountdown(count);
                 if (count <= 3) {
                     els.display.classList.add('countdown-warning');
-                    playCountdown(count);
                 }
             } else {
                 clearInterval(interval);

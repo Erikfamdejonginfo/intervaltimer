@@ -39,13 +39,10 @@ export function playTone(frequency, durationMs, waveform = 'sine', volume = 0.5)
 }
 
 export function playCountdown(secondsLeft) {
-    const tones = {
-        3: 440,   // A4 — low
-        2: 554,   // C#5 — mid
-        1: 659    // E5 — high
-    };
-    const freq = tones[secondsLeft];
-    if (freq) playTone(freq, 120);
+    if (secondsLeft <= 0 || secondsLeft > 10) return;
+    // Pitch rises as countdown approaches zero: 330 Hz at 10 → 659 Hz at 1
+    const freq = 330 + (10 - secondsLeft) * (329 / 9);
+    playTone(freq, 120);
 }
 
 export function playStepEnd() {

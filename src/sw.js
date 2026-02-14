@@ -1,4 +1,4 @@
-const CACHE_NAME = 'intervaltimer-v7';
+const CACHE_NAME = 'intervaltimer-v8';
 const ASSETS = [
     './',
     'index.html',
