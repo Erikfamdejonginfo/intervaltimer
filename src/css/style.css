@@ -454,8 +454,8 @@ main {
 .horse-scene {
     display: none;
     width: 100%;
-    max-width: 600px;
-    height: 200px;
+    max-width: 400px;
+    height: 100px;
     position: relative;
     margin-bottom: 0.5rem;
 }
@@ -470,16 +470,16 @@ main {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 20px;
+    height: 10px;
     background: linear-gradient(to bottom, #2d6b3f, #1e4a2c);
     border-radius: 4px 4px 0 0;
 }
 
 .grass-blade {
     position: absolute;
-    bottom: 16px;
-    width: 3px;
-    height: 14px;
+    bottom: 8px;
+    width: 2px;
+    height: 8px;
     background: #3a9e56;
     border-radius: 2px 2px 0 0;
     transform-origin: bottom center;
@@ -487,13 +487,13 @@ main {
 }
 
 .grass-blade:nth-child(odd) {
-    height: 11px;
+    height: 6px;
     background: #2d8a48;
     animation-delay: -0.4s;
 }
 
 .grass-blade:nth-child(3n) {
-    height: 16px;
+    height: 9px;
     background: #45b068;
     animation-delay: -0.8s;
 }
@@ -513,17 +513,17 @@ main {
 
 .horse-runner {
     position: absolute;
-    bottom: 14px;
+    bottom: 7px;
     animation: horseRun 4s linear infinite;
 }
 
-/* === Horse Sprite (2x native size: 222x162) === */
+/* === Horse Sprite (native size: 111x81) === */
 .horse-sprite {
-    width: 222px;
-    height: 162px;
+    width: 111px;
+    height: 81px;
     background-image: url('../icons/caballoNormal_strip.png');
     background-repeat: no-repeat;
-    background-size: 3996px 162px;
+    background-size: 1998px 81px;
     animation: horseGallop 0.9s steps(18) infinite;
 }
 
@@ -533,22 +533,22 @@ main {
 
 @keyframes horseGallop {
     from { background-position: 0 0; }
-    to   { background-position: -3996px 0; }
+    to   { background-position: -1998px 0; }
 }
 
 /* === Dust Particles === */
 .horse-dust {
     position: absolute;
-    bottom: 10px;
-    left: -10px;
+    bottom: 5px;
+    left: -5px;
     display: flex;
-    gap: 6px;
+    gap: 3px;
 }
 
 .horse-dust span {
     display: block;
-    width: 14px;
-    height: 14px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background: rgba(160, 140, 110, 0.7);
     opacity: 0;
@@ -557,31 +557,31 @@ main {
 
 .horse-dust span:nth-child(2) {
     animation-delay: 0.08s;
-    width: 11px;
-    height: 11px;
+    width: 6px;
+    height: 6px;
 }
 
 .horse-dust span:nth-child(3) {
     animation-delay: 0.16s;
-    width: 9px;
-    height: 9px;
-}
-
-.horse-dust span:nth-child(4) {
-    animation-delay: 0.24s;
-    width: 7px;
-    height: 7px;
-}
-
-.horse-dust span:nth-child(5) {
-    animation-delay: 0.32s;
     width: 5px;
     height: 5px;
 }
 
+.horse-dust span:nth-child(4) {
+    animation-delay: 0.24s;
+    width: 4px;
+    height: 4px;
+}
+
+.horse-dust span:nth-child(5) {
+    animation-delay: 0.32s;
+    width: 3px;
+    height: 3px;
+}
+
 @keyframes horseRun {
-    0%   { left: -240px; }
-    100% { left: calc(100% + 240px); }
+    0%   { left: -120px; }
+    100% { left: calc(100% + 120px); }
 }
 
 @keyframes dustPuff {
