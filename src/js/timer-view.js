@@ -5,6 +5,7 @@ import { formatTime } from './utils.js';
 
 let engine = null;
 let onStopCallback = null;
+let setOverviewData = [];
 
 // DOM element references
 const els = {};
@@ -23,6 +24,7 @@ function cacheElements() {
     els.completeSummary = document.getElementById('complete-summary');
     els.totalTime = document.getElementById('timer-total');
     els.horseSprite = document.getElementById('horse-sprite');
+    els.setOverview = document.getElementById('set-overview');
 }
 
 /**
@@ -30,7 +32,8 @@ function cacheElements() {
  */
 function flattenSchema(schema) {
     const plan = [];
-    for (const set of schema.sets) {
+    for (let setIdx = 0; setIdx < schema.sets.length; setIdx++) {
+        const set = schema.sets[setIdx];
         for (let round = 1; round <= set.repeats; round++) {
             for (let i = 0; i < set.steps.length; i++) {
                 const step = set.steps[i];
@@ -39,6 +42,7 @@ function flattenSchema(schema) {
                     duration: step.duration,
                     type: step.type,
                     setName: set.name,
+                    setIndex: setIdx,
                     round,
                     totalRounds: set.repeats,
                     stepIndex: i + 1,
@@ -50,6 +54,33 @@ function flattenSchema(schema) {
     return plan;
 }
 
+/**
+ * Build set overview data from schema for the upcoming sets list.
+ */
+function buildSetOverview(schema) {
+    return schema.sets.map((set, index) => {
+        const stepDuration = set.steps.reduce((sum, s) => sum + s.duration, 0);
+        const totalDuration = stepDuration * set.repeats;
+        return { index, name: set.name, totalDuration };
+    });
+}
+
+/**
+ * Render the set overview list, hiding completed sets and highlighting current.
+ */
+function renderSetOverview(currentSetIndex) {
+    if (!els.setOverview) return;
+
+    els.setOverview.innerHTML = setOverviewData
+        .filter(s => s.index >= currentSetIndex)
+        .map(s => {
+            const isCurrent = s.index === currentSetIndex;
+            const cls = isCurrent ? 'set-overview-item current' : 'set-overview-item';
+            return `<div class="${cls}"><span class="set-overview-name">${s.name}</span><span class="set-overview-time">${formatTime(s.totalDuration)}</span></div>`;
+        })
+        .join('');
+}
+
 export function startTimer(schema, onStop) {
     cacheElements();
     onStopCallback = onStop;
@@ -59,6 +90,10 @@ export function startTimer(schema, onStop) {
 
     const plan = flattenSchema(schema);
     engine = new TimerEngine(plan);
+
+    // Build set overview
+    setOverviewData = buildSetOverview(schema);
+    renderSetOverview(0);
 
     // Show timer, hide complete screen
     els.container.style.display = '';
@@ -96,17 +131,22 @@ function runStartCountdown(firstSegment) {
         els.info.textContent = `Volgende: ${firstSegment.name}`;
         els.setName.textContent = firstSegment.setName;
         els.container.className = 'timer-container';
-        els.display.classList.add('countdown-warning');
 
-        let count = 3;
+        let count = 10;
         els.display.textContent = String(count);
-        playCountdown(count);
+        if (count <= 3) {
+            els.display.classList.add('countdown-warning');
+            playCountdown(count);
+        }
 
         const interval = setInterval(() => {
             count--;
             if (count > 0) {
                 els.display.textContent = String(count);
-                playCountdown(count);
+                if (count <= 3) {
+                    els.display.classList.add('countdown-warning');
+                    playCountdown(count);
+                }
             } else {
                 clearInterval(interval);
                 els.display.classList.remove('countdown-warning');
@@ -177,6 +217,8 @@ function onStepStart({ segment, segmentIndex }) {
     const totalRemaining = engine.totalDuration - engine.completedDuration;
     els.totalTime.textContent = `Totaal resterend: ${formatTime(Math.ceil(totalRemaining))}`;
 
+    // Update set overview
+    renderSetOverview(segment.setIndex);
 }
 
 function onStepEnd({ segment }) {
