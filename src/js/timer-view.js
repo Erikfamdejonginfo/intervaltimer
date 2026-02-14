@@ -5,7 +5,6 @@ import { formatTime } from './utils.js';
 
 let engine = null;
 let onStopCallback = null;
-let setOverviewData = [];
 
 // DOM element references
 const els = {};
@@ -54,31 +53,39 @@ function flattenSchema(schema) {
     return plan;
 }
 
-/**
- * Build set overview data from schema for the upcoming sets list.
- */
-function buildSetOverview(schema) {
-    return schema.sets.map((set, index) => {
-        const stepDuration = set.steps.reduce((sum, s) => sum + s.duration, 0);
-        const totalDuration = stepDuration * set.repeats;
-        return { index, name: set.name, totalDuration };
-    });
-}
+const MAX_OVERVIEW_STEPS = 9;
 
 /**
- * Render the set overview list, hiding completed sets and highlighting current.
+ * Render the upcoming steps overview from the flat plan.
+ * Shows the current step highlighted + up to MAX_OVERVIEW_STEPS total.
  */
-function renderSetOverview(currentSetIndex) {
-    if (!els.setOverview) return;
+function renderStepOverview(currentIndex) {
+    if (!els.setOverview || !engine) return;
 
-    els.setOverview.innerHTML = setOverviewData
-        .filter(s => s.index >= currentSetIndex)
-        .map(s => {
-            const isCurrent = s.index === currentSetIndex;
-            const cls = isCurrent ? 'set-overview-item current' : 'set-overview-item';
-            return `<div class="${cls}"><span class="set-overview-name">${s.name}</span><span class="set-overview-time">${formatTime(s.totalDuration)}</span></div>`;
-        })
-        .join('');
+    const plan = engine.plan;
+    const visible = plan.slice(currentIndex, currentIndex + MAX_OVERVIEW_STEPS);
+
+    let lastSetName = null;
+    let html = '';
+
+    for (let i = 0; i < visible.length; i++) {
+        const step = visible[i];
+        const isCurrent = i === 0;
+
+        // Show set header when set changes
+        if (step.setName !== lastSetName) {
+            lastSetName = step.setName;
+            html += `<div class="step-overview-set-header">${step.setName}</div>`;
+        }
+
+        const cls = isCurrent
+            ? `step-overview-item current type-${step.type}`
+            : `step-overview-item type-${step.type}`;
+        const roundInfo = step.totalRounds > 1 ? ` <span class="step-overview-round">${step.round}/${step.totalRounds}</span>` : '';
+        html += `<div class="${cls}"><span class="step-overview-name">${step.name}${roundInfo}</span><span class="step-overview-time">${formatTime(step.duration)}</span></div>`;
+    }
+
+    els.setOverview.innerHTML = html;
 }
 
 export function startTimer(schema, onStop) {
@@ -91,9 +98,8 @@ export function startTimer(schema, onStop) {
     const plan = flattenSchema(schema);
     engine = new TimerEngine(plan);
 
-    // Build set overview
-    setOverviewData = buildSetOverview(schema);
-    renderSetOverview(0);
+    // Render initial step overview
+    renderStepOverview(0);
 
     // Show timer, hide complete screen
     els.container.style.display = '';
@@ -217,8 +223,8 @@ function onStepStart({ segment, segmentIndex }) {
     const totalRemaining = engine.totalDuration - engine.completedDuration;
     els.totalTime.textContent = `Totaal resterend: ${formatTime(Math.ceil(totalRemaining))}`;
 
-    // Update set overview
-    renderSetOverview(segment.setIndex);
+    // Update step overview
+    renderStepOverview(segmentIndex);
 }
 
 function onStepEnd({ segment }) {
